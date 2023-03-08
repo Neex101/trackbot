@@ -76,15 +76,17 @@ class SerialConnection(object):
         if sys.platform == "win32":
 
             port_list = [port.device for port in serial.tools.list_ports.comports() if 'n/a' not in port.description]
+            port_list.reverse() # just quicker order sometimes
+
 
             print("Windows port list: ") # for debugging
             print(str(port_list))
 
+
             for comport in port_list:
 
-                print("Trying Windows port: ")
-                print (comport)
-
+                print("Trying Windows port: " + comport)
+                
                 trackbot_port = self.is_port_actually_a_trackbot(comport)
                 if trackbot_port: break
                 
@@ -163,55 +165,44 @@ class SerialConnection(object):
 
     def is_port_actually_a_trackbot(self, available_port):
 
+        ping_message = b"M115\n"
+        expected_response_key = "FIRMWARE_NAME:Marlin"
+        
         try: 
-            log("Try to connect to: " + available_port)
             # set up connection
-            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-
-            # reopen port, just in case its been in use somewhere else
-            self.s.close()
-            self.s.open()
-            # serial object needs time to make the connection before we can do anything else
-            time.sleep(1)
+            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 1, writeTimeout = 1) # assign
 
             try:
-                # flush input and soft-reset: this will trigger the GRBL welcome message
+
                 self.s.flushInput()
-                self.s.write("M115")
-                # give it a second to reply
-                time.sleep(0.5)
-                first_bytes = self.s.inWaiting()
-                log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
+                log("Pinging...")
+                self.s.write(ping_message)
 
-                if first_bytes:
+                first_line = self.s.readline()
+                log("Is port Trackbot? " + str(available_port) + " | First read: " + str(first_line))
 
-                    # Read in first input and log it
-                    def strip_and_log(input_string):
-                        new_string = input_string.strip()
-                        log(new_string)
-                        return new_string
+                if first_line:
 
-                    stripped_input = map(strip_and_log, self.s.readlines())
-
-                    # Is this device a SmartBench? 
-                    if any('FIRMWARE' in ele for ele in stripped_input):
-                        # Found SmartBench! 
-                        trackbot_port = available_port
+                    if expected_response_key in str(first_line):
 
                         log("FOUND PORT!!!!!!!!!!!!!!!!!!!!!!!")
-
-                        return trackbot_port
+                        self.s.flushInput()
+                        return available_port
 
                     else:
+                        
+                        log("Response not recognised")
                         self.s.close()
                 else:
                     self.s.close()
+                    log("Nothing in the read buffer")
 
             except:
-                log("Could not communicate with that port at all")
+                log("Serial connection made, but unable to detect Trackbot")
+                self.s.close()
 
         except: 
-            log("Wow definitely not that port")
+            log("No serial connection was possible")
 
         return ''
 

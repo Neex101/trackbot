@@ -28,6 +28,12 @@ from kivy.core.window import Window
 
 import trackbot_machine
 
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
+
 class TrackBotUI(App):
 
     def build(self):

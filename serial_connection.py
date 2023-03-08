@@ -43,12 +43,10 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
-    def __init__(self, machine, screen_manager, settings_manager, localization, job):
+    def __init__(self, machine, screen_manager):
 
-        self.sm = screen_manager
-        self.sett =settings_manager     
         self.m = machine
-        self.jd = job
+        self.sm = screen_manager
 
     def __del__(self):
         if self.s: self.s.close()

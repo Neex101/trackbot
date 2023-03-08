@@ -85,7 +85,7 @@ class SerialConnection(object):
                 print("Trying Windows port: ")
                 print (comport)
 
-                trackbot_port = self.is_port_actually_our_machine(comport)
+                trackbot_port = self.is_port_actually_a_trackbot(comport)
                 if trackbot_port: break
                 
             if not trackbot_port: 
@@ -101,7 +101,7 @@ class SerialConnection(object):
                     print("Mac port to try: ") # for debugging
                     print (line)
 
-                    trackbot_port = self.is_port_actually_our_machine('/dev/' + str(line))
+                    trackbot_port = self.is_port_actually_a_trackbot('/dev/' + str(line))
                     if trackbot_port: break
 
             if not trackbot_port: 
@@ -124,7 +124,7 @@ class SerialConnection(object):
 
                 # set up serial connection with first (most preferred) available port
                 for available_port in list_of_available_ports:
-                    trackbot_port = self.is_port_actually_our_machine('/dev/' + str(available_port))
+                    trackbot_port = self.is_port_actually_a_trackbot('/dev/' + str(available_port))
                     if trackbot_port: break
 
                 # If all else fails, try to connect to ttyS or ttyAMA port anyway
@@ -154,14 +154,14 @@ class SerialConnection(object):
         
         try: 
             if self.is_connected():
-                log('Initialising grbl...')
-                self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
+                log("Go time...")
+                # self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
 
         except:
-            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
+            log("Serial connection made, but didn't like first command :-(")      
 
 
-    def is_port_actually_our_machine(self, available_port):
+    def is_port_actually_a_trackbot(self, available_port):
 
         try: 
             log("Try to connect to: " + available_port)
@@ -177,9 +177,9 @@ class SerialConnection(object):
             try:
                 # flush input and soft-reset: this will trigger the GRBL welcome message
                 self.s.flushInput()
-                self.s.write("\x18")
+                self.s.write("M115")
                 # give it a second to reply
-                time.sleep(1)
+                time.sleep(0.5)
                 first_bytes = self.s.inWaiting()
                 log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
 
@@ -194,9 +194,12 @@ class SerialConnection(object):
                     stripped_input = map(strip_and_log, self.s.readlines())
 
                     # Is this device a SmartBench? 
-                    if any('SmartBench' in ele for ele in stripped_input):
+                    if any('FIRMWARE' in ele for ele in stripped_input):
                         # Found SmartBench! 
                         trackbot_port = available_port
+
+                        log("FOUND PORT!!!!!!!!!!!!!!!!!!!!!!!")
+
                         return trackbot_port
 
                     else:

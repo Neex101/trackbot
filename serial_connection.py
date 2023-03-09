@@ -152,7 +152,8 @@ class SerialConnection(object):
     # is serial port connected?
     def is_connected(self):
 
-        if self.s != None:
+        # if self.s != None and self.s.isOpen():
+        if self.s.isOpen():
             return True
         else: 
             return False

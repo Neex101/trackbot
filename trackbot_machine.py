@@ -31,4 +31,4 @@ class TrackBotMachine(object):
 
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm)
-        self.s.autodetect_port_and_establish_connection()
+        self.s.find_and_connect_with_trackbot()

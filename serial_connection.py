@@ -39,7 +39,7 @@ class SerialConnection(object):
         log('Serial connection destructor')
 
     # Primary fuunction to establish serial connection
-    def detect_ports_and_establish_serial_connection(self):
+    def find_and_connect_with_trackbot(self):
 
         log('Attempt serial connection...')
         trackbot_port = ''

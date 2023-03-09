@@ -30,5 +30,5 @@ class TrackBotMachine(object):
 
         self.sm = screen_manager
 
-        # self.cv = cv_camera.CV_Camera(self.sm)
         self.s = serial_connection.SerialConnection(self, self.sm)
+        self.cv = cv_camera.CV_Camera(self.sm)

@@ -92,7 +92,7 @@ class SerialConnection(object):
         
         try: 
             # set up connection
-            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 1, writeTimeout = 1) # assign
+            self.s = serial.Serial(str(available_port), self.BAUD_RATE, timeout = 1, writeTimeout = 1) # assign
 
             try:
                 self.s.flushInput()

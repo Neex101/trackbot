@@ -73,7 +73,7 @@ class SerialConnection(object):
 
             # set up serial connection with first (most preferred) available port
             for available_port in list_of_available_ports:
-                log("Trying port: " + comport)            
+                log("Trying port: " + available_port)            
                 trackbot_port = self.is_port_actually_a_trackbot('/dev/' + str(available_port))
                 if trackbot_port: break
 

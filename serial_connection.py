@@ -31,8 +31,12 @@ class SerialConnection(object):
     BAUD_RATE = 115200 
 
     def __init__(self, machine, screen_manager):
+        
         self.m = machine
         self.sm = screen_manager
+
+        self.find_and_connect_with_trackbot()
+
 
     def __del__(self):
         if self.s: self.s.close()
@@ -79,7 +83,7 @@ class SerialConnection(object):
 
         # Display result         
         if self.is_connected():
-            log("Serial connection made to TrackBot, on port:" + str(trackbot_port)) + ". It's go time."
+            log("Serial connection made to TrackBot, on port:" + str(trackbot_port) + ". It's go time.")
         else:
             log("Serial connection not made.")
 

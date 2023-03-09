@@ -35,16 +35,7 @@ class SerialConnection(object):
     s = None    # Serial comms object
     sm = None   # Screen manager object
 
-    
-    write_command_buffer = []
-    write_realtime_buffer = []
-    
-    # Flag to kill grbl scanner (used in zhead cycle app)
-    # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
-    grbl_scanner_running = False
-
     def __init__(self, machine, screen_manager):
-
         self.m = machine
         self.sm = screen_manager
 
@@ -72,95 +63,47 @@ class SerialConnection(object):
         log('Start to establish connection...')
         trackbot_port = ''
 
-        # if Windows
+        # if Windows, for dev
         if sys.platform == "win32":
 
+            # Gather list of all serial com ports
             port_list = [port.device for port in serial.tools.list_ports.comports() if 'n/a' not in port.description]
             port_list.reverse() # just quicker order sometimes
 
-
-            print("Windows port list: ") # for debugging
-            print(str(port_list))
-
+            log("Windows port list: " + str(port_list)) # for debugging
 
             for comport in port_list:
 
-                print("Trying Windows port: " + comport)
-                
+                log("Trying Windows port: " + comport)            
                 trackbot_port = self.is_port_actually_a_trackbot(comport)
                 if trackbot_port: break
                 
             if not trackbot_port: 
-                log("No arduino connected")
+                log("No trackbot connected")
 
-        elif sys.platform == "darwin":
-            self.suppress_error_screens = True
-
-            filesForDevice = listdir('/dev/') # put all device files into list[]
-            for line in filesForDevice:
-                if line.startswith('tty.usbmodem'): # look for... 
-
-                    print("Mac port to try: ") # for debugging
-                    print (line)
-
-                    trackbot_port = self.is_port_actually_a_trackbot('/dev/' + str(line))
-                    if trackbot_port: break
-
-            if not trackbot_port: 
-                log("No arduino connected")
-
+        # If Linux
         else:
-            try:
-                # list of portst that we may want to use, in order of preference
-                default_serial_port = 'ttyS'
-                ACM_port = 'ttyACM'
-                USB_port = 'ttyUSB'
-                AMA_port = 'ttyAMA'
+            # list of portst that we may want to use, in order of preference
+            default_serial_port = 'ttyS'
+            ACM_port = 'ttyACM'
+            USB_port = 'ttyUSB'
+            AMA_port = 'ttyAMA'
 
-                port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
+            port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
+            filesForDevice = listdir('/dev/') # put all device files into list[]
+            list_of_available_ports = [port for potential_port in port_list for port in filesForDevice if potential_port in port] # this comes out in order of preference too :)
+            log("Linux port list: " + list_of_available_ports)
 
-                filesForDevice = listdir('/dev/') # put all device files into list[]
+            # set up serial connection with first (most preferred) available port
+            for available_port in list_of_available_ports:
+                trackbot_port = self.is_port_actually_a_trackbot('/dev/' + str(available_port))
+                if trackbot_port: break
 
-                # this comes out in order of preference too :)
-                list_of_available_ports = [port for potential_port in port_list for port in filesForDevice if potential_port in port]
-
-                # set up serial connection with first (most preferred) available port
-                for available_port in list_of_available_ports:
-                    trackbot_port = self.is_port_actually_a_trackbot('/dev/' + str(available_port))
-                    if trackbot_port: break
-
-                # If all else fails, try to connect to ttyS or ttyAMA port anyway
-                if trackbot_port == '':
-
-                    first_port = list_of_available_ports[0]
-                    last_port = list_of_available_ports[-1]
-                    try: 
-                        if default_serial_port in first_port:
-                            first_list_index = 1
-                            self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                            trackbot_port = ": could not identify if any port was SmartBench, so attempting " + first_port
-                    except: 
-                        if AMA_port in last_port:
-                            last_list_index = -1
-                            self.s = serial.Serial('/dev/' + last_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                            trackbot_port = ": could not identify if any port was SmartBench, so attempting " + last_port
-
-                    if trackbot_port == '':
-                        Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
-
-            except:
-                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway. 
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
-
-        log("Serial connection status: " + str(self.is_connected()) + " " + str(trackbot_port))
-        
-        try: 
-            if self.is_connected():
-                log("Go time...")
-                # self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
-
-        except:
-            log("Serial connection made, but didn't like first command :-(")      
+        # Display result         
+        if self.is_connected():
+            log("Serial connection made, on port:" + str(trackbot_port)) + ". It's go time."
+        else:
+            log("Serial connection not made.")
 
 
     def is_port_actually_a_trackbot(self, available_port):
@@ -185,7 +128,7 @@ class SerialConnection(object):
 
                     if expected_response_key in str(first_line):
 
-                        log("FOUND PORT!!!!!!!!!!!!!!!!!!!!!!!")
+                        log("Expected response: FOUND TRACKBOT!")
                         self.s.flushInput()
                         return available_port
 

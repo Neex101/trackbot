@@ -92,7 +92,7 @@ class SerialConnection(object):
             port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
             filesForDevice = listdir('/dev/') # put all device files into list[]
             list_of_available_ports = [port for potential_port in port_list for port in filesForDevice if potential_port in port] # this comes out in order of preference too :)
-            log("Linux port list: " + list_of_available_ports)
+            log("Linux port list: " + str(list_of_available_ports))
 
             # set up serial connection with first (most preferred) available port
             for available_port in list_of_available_ports:

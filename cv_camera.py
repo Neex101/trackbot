@@ -11,10 +11,10 @@ from datetime import datetime
 import os.path
 from os import path
 
-if platform == "linux" or platform == "linux2":
+if sys.platform == "linux" or sys.platform == "linux2":
     import cv2, libcamera
     from picamera2 import Picamera2
-    
+
 #from __builtin__ import True
 
 

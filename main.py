@@ -48,7 +48,7 @@ class TrackBotUI(App):
         m = trackbot_machine.TrackBotMachine(sm)
 
         # # initialise the screens (legacy)
-        basic_screen = screen_basic.BasicDevScreen(name='basic', screen_manager = sm, machine = m)
+        basic_screen = screen_basic.BasicDevScreen(name='basic_screen', screen_manager = sm, machine = m)
 
         # # add the screens to screen manager
         sm.add_widget(basic_screen)

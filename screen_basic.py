@@ -84,6 +84,8 @@ class BasicDevScreen(Screen):
     def exit_screen(self, dt):
         pass
 
-
     def on_leave(self):
         pass
+
+    def update_position_label_text(self, pos):
+        self.cool_down_label.text = str(pos)

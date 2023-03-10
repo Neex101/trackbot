@@ -32,7 +32,7 @@ class TrackBotMachine(object):
 
         # self.s = serial_connection.SerialConnection(self, self.sm)
         log("Polling centres...")
-        Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.5)
+        Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.2)
 
         self.cv = cv_camera.CV_Camera(self.sm)
 
@@ -43,5 +43,6 @@ class TrackBotMachine(object):
 
     def face_centre_from_centre_of_frame_in_x(self, dt):
         if self.cv:
-            log("Face centre in x: " + str(self.cv.get_face_from_centre_x()))
-        # log("Test")
+            pos = self.cv.get_face_from_centre_x()
+            log("Face centre in x: " + str(pos))
+            self.sm.get_screen('basic_screen').update_position_label_text(str(pos))

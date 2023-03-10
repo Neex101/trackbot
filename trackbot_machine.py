@@ -30,7 +30,7 @@ class TrackBotMachine(object):
 
         self.sm = screen_manager
 
-        self.s = serial_connection.SerialConnection(self, self.sm)
+        # self.s = serial_connection.SerialConnection(self, self.sm)
         log("Polling centres...")
         Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.5)
 

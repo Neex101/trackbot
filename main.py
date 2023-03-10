@@ -50,7 +50,7 @@ class TrackBotUI(App):
         # # add the screens to screen manager
         # sm.add_widget(lobby_screen)
 
-        # return sm
+        return sm
 
 
 if __name__ == '__main__':

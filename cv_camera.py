@@ -21,7 +21,8 @@ def log(message):
 
 class CV_Camera(object):
 
-    cx, cy = 0, 0 # face centres
+    cx, cy = 0, 0 # face centres, measured from top left of frame
+    cam_frame_x_size, cam_frame_y_size = 640, 480 # size of captured frame
     
     def __init__(self, screen_manager):
         self.sm = screen_manager
@@ -40,7 +41,7 @@ class CV_Camera(object):
             face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
             cv2.startWindowThread()
             picam2 = Picamera2()
-            preview_config = picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480), })
+            preview_config = picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (self.cam_frame_x_size, self.cam_frame_y_size), })
             # preview_config = picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080), })
             preview_config["transform"] = libcamera.Transform(hflip=1, vflip=1)
             picam2.configure(preview_config)
@@ -59,13 +60,14 @@ class CV_Camera(object):
                     self.cx=int(x+x+w)//2
                     self.cy=int(y+y+h)//2
                     cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
-                    log(str(self.cx) + ", " + str(self.cy))
-
 
                 cv2.imshow("Camera", img)
 
-    def get_face_xy_from_centre():
-        return self.cx, self.cy
+    def get_face_from_centre_x(self):
+        
+        # cx & cy work from top left of frame
+        x_coord_from_center = self.cam_frame_x_size/2 - self.cx
+        return x_coord_from_center
         
 
 

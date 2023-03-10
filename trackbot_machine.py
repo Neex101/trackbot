@@ -40,6 +40,6 @@ class TrackBotMachine(object):
         log('trackbot_machine destructor')
 
     def face_centre_from_centre_of_frame_in_x(self, dt):
-        if self.cv:
-            log("Face centre in x: " + str(self.cv.get_face_from_centre_x()))
-        # log("Test")
+        # if self.cv:
+        #     log("Face centre in x: " + str(self.cv.get_face_from_centre_x()))
+        log("Test")

@@ -56,7 +56,7 @@ class CV_Camera(object):
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0))
                     self.cx=int(x+x+w)//2
                     self.cy=int(y+y+h)//2
-                    cv2.circle(img,(cx,cy),5,(0,0,255),-1)
+                    cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
 
                 cv2.imshow("Camera", img)
 

@@ -32,3 +32,8 @@ class TrackBotMachine(object):
 
         self.s = serial_connection.SerialConnection(self, self.sm)
         self.cv = cv_camera.CV_Camera(self.sm)
+
+        Clock.schedule_interval(report_face_centre, 0.5)
+
+    def report_face_centre():
+        log("Face centre: " + str(self.cv.get_face_xy_from_centre()))

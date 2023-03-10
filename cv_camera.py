@@ -21,7 +21,8 @@ def log(message):
 
 class CV_Camera(object):
 
-
+    cx, cy = 0, 0 # face centres
+    
     def __init__(self, screen_manager):
         self.sm = screen_manager
 
@@ -53,10 +54,14 @@ class CV_Camera(object):
 
                 for (x, y, w, h) in faces:
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0))
-                    cx=int(x+x+w)//2
-                    cy=int(y+y+h)//2
+                    self.cx=int(x+x+w)//2
+                    self.cy=int(y+y+h)//2
                     cv2.circle(img,(cx,cy),5,(0,0,255),-1)
 
                 cv2.imshow("Camera", img)
+
+    def get_face_xy_from_centre():
+        return self.cx, self.cy
+        
 
 

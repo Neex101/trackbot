@@ -36,7 +36,8 @@ class TrackBotMachine(object):
     def __del__(self):
         log('trackbot_machine destructor')
 
-
     def spin_z(self, increment):
         pos = increment / 100
-        self.s.send("G91 G0 Z" + str(pos))
+        self.s.write(str.encode("M17"))
+        self.s.write(str.encode("G91"))
+        self.s.send("G0 Z" + str(pos))

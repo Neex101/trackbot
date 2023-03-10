@@ -11,7 +11,10 @@ from datetime import datetime
 import os.path
 from os import path
 
-
+if platform == "linux" or platform == "linux2":
+    import cv2, libcamera
+    from picamera2 import Picamera2
+    
 #from __builtin__ import True
 
 
@@ -37,8 +40,7 @@ class CV_Camera(object):
         else:        
             log("Starting CV")
 
-            import cv2, libcamera
-            from picamera2 import Picamera2
+
             # Grab images as numpy arrays and leave everything else to OpenCV.
             face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
             cv2.startWindowThread()

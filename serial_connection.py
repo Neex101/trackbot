@@ -145,4 +145,5 @@ class SerialConnection(object):
         if self.s.isOpen():
             payload = message + "\n"
             log(payload) 
+            self.s.write(str.encode("M17\n"))
             self.s.write(str.encode(payload))

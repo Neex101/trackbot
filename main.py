@@ -28,6 +28,9 @@ from kivy.core.window import Window
 
 import trackbot_machine
 
+# Screens
+import screen_basic
+
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
@@ -45,10 +48,10 @@ class TrackBotUI(App):
         m = trackbot_machine.TrackBotMachine(sm)
 
         # # initialise the screens (legacy)
-        # lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
+        basic_screen = screen_basic.BasicDevScreen(name='basic', screen_manager = sm, machine = m)
 
         # # add the screens to screen manager
-        # sm.add_widget(lobby_screen)
+        sm.add_widget(basic_screen)
 
         return sm
 

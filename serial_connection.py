@@ -144,4 +144,4 @@ class SerialConnection(object):
     def send(self, message):
         if self.s.isOpen():
             payload = message + "\n" 
-            self.s.write(payload)
+            self.s.write(str.encode(payload))

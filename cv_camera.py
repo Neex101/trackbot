@@ -28,6 +28,7 @@ class CV_Camera(object):
     cam_frame_x_size, cam_frame_y_size = 640, 480 # size of captured frame
     
     picam2 = None
+    face_detector = None
 
     def __init__(self, screen_manager):
         self.sm = screen_manager
@@ -42,7 +43,7 @@ class CV_Camera(object):
 
 
             # Grab images as numpy arrays and leave everything else to OpenCV.
-            face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
+            self.face_detector = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
             cv2.startWindowThread()
             self.picam2 = Picamera2()
             preview_config = self.picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (self.cam_frame_x_size, self.cam_frame_y_size), })
@@ -59,7 +60,7 @@ class CV_Camera(object):
         img = self.picam2.capture_array()
 
         grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        faces = face_detector.detectMultiScale(grey, 1.1, 5)
+        faces = self.face_detector.detectMultiScale(grey, 1.1, 5)
 
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0))

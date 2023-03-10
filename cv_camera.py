@@ -46,6 +46,8 @@ class CV_Camera(object):
             picam2.configure(preview_config)
             picam2.start()
 
+            log("Camera started.")
+
             while True:
                 img = picam2.capture_array()
 
@@ -57,6 +59,8 @@ class CV_Camera(object):
                     self.cx=int(x+x+w)//2
                     self.cy=int(y+y+h)//2
                     cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
+                    log(str(self.cx,self.cy))
+
 
                 cv2.imshow("Camera", img)
 

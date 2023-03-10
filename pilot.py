@@ -36,7 +36,7 @@ class Pilot(object):
             pos = self.m.cv.get_face_from_centre_x()
             log("Face centre in x: " + str(pos))
             self.sm.get_screen('basic_screen').update_position_label_text(str(pos))
-            self.sm.spin_z(pos)
+            self.m.spin_z(pos)
 
     def __del__(self):
         

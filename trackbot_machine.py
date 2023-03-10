@@ -31,10 +31,12 @@ class TrackBotMachine(object):
         self.sm = screen_manager
 
         self.s = serial_connection.SerialConnection(self, self.sm)
-        self.cv = cv_camera.CV_Camera(self.sm)
-
         log("Polling centres...")
         self.poll = Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.5)
+
+        self.cv = cv_camera.CV_Camera(self.sm)
+
+
 
     def __del__(self):
         log('trackbot_machine destructor')

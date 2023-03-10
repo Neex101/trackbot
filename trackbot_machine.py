@@ -32,7 +32,7 @@ class TrackBotMachine(object):
 
         self.s = serial_connection.SerialConnection(self, self.sm)
         log("Polling centres...")
-        self.poll = Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.5)
+        Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.5)
 
         self.cv = cv_camera.CV_Camera(self.sm)
 

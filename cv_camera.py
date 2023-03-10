@@ -46,22 +46,25 @@ class CV_Camera(object):
             preview_config["transform"] = libcamera.Transform(hflip=1, vflip=1)
             picam2.configure(preview_config)
             picam2.start()
-
             log("Camera started.")
 
-            while True:
-                img = picam2.capture_array()
+            Clock.schedule_interval(self.capture_and_detect, 0.2)
 
-                grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                faces = face_detector.detectMultiScale(grey, 1.1, 5)
+    def capture_and_detect(self):
+                
+        img = picam2.capture_array()
 
-                for (x, y, w, h) in faces:
-                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0))
-                    self.cx=int(x+x+w)//2
-                    self.cy=int(y+y+h)//2
-                    cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
+        grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_detector.detectMultiScale(grey, 1.1, 5)
 
-                cv2.imshow("Camera", img)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0))
+            self.cx=int(x+x+w)//2
+            self.cy=int(y+y+h)//2
+            cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
+
+        cv2.imshow("Camera", img)
+        
 
     def get_face_from_centre_x(self):
         

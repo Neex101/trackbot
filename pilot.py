@@ -28,7 +28,7 @@ class Pilot(object):
         self.sm = screen_manager
         self.m = machine
 
-        Clock.schedule_interval(self.get_face_centre_from_centre_of_frame_in_x, 2)
+        Clock.schedule_interval(self.get_face_centre_from_centre_of_frame_in_x, 0.2)
 
     def get_face_centre_from_centre_of_frame_in_x(self, dt):
 

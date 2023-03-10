@@ -27,6 +27,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
 import trackbot_machine
+import pilot
 
 # Screens
 import screen_basic
@@ -47,8 +48,11 @@ class TrackBotUI(App):
         # Initialise 'm'achine object
         m = trackbot_machine.TrackBotMachine(sm)
 
+        # Initialise 'p'ilot object
+        p = pilot.Pilot(sm, m)
+
         # # initialise the screens (legacy)
-        basic_screen = screen_basic.BasicDevScreen(name='basic_screen', screen_manager = sm, machine = m)
+        basic_screen = screen_basic.BasicDevScreen(name='basic_screen', screen_manager = sm, machine = m, pilot = p)
 
         # # add the screens to screen manager
         sm.add_widget(basic_screen)

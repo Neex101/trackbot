@@ -24,25 +24,19 @@ def log(message):
 class TrackBotMachine(object):
     
     s = None # serial object
-    cv = None
+    cv = None # camera vision
 
     def __init__(self, screen_manager):
 
         self.sm = screen_manager
 
         # self.s = serial_connection.SerialConnection(self, self.sm)
-        log("Polling centres...")
-        Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.2)
-
         self.cv = cv_camera.CV_Camera(self.sm)
-
-
 
     def __del__(self):
         log('trackbot_machine destructor')
 
-    def face_centre_from_centre_of_frame_in_x(self, dt):
-        if self.cv:
-            pos = self.cv.get_face_from_centre_x()
-            log("Face centre in x: " + str(pos))
-            self.sm.get_screen('basic_screen').update_position_label_text(str(pos))
+
+    def spin_z(self, increment):
+        pos = increment / 100
+        self.s.write("G91 G0 Z" + str(pos))

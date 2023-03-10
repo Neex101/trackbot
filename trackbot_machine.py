@@ -39,4 +39,4 @@ class TrackBotMachine(object):
 
     def spin_z(self, increment):
         pos = increment / 100
-        self.s.write("G91 G0 Z" + str(pos))
+        self.s.send("G91 G0 Z" + str(pos))

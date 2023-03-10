@@ -74,7 +74,8 @@ class CV_Camera(object):
     def get_face_from_centre_x(self):
         
         # cx & cy work from top left of frame
-        x_coord_from_center = self.cam_frame_x_size/2 - self.cx
+        x_coord_from_center = self.cx - self.cam_frame_x_size/2
+
         return x_coord_from_center
         
 

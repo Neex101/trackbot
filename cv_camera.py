@@ -50,7 +50,7 @@ class CV_Camera(object):
 
             Clock.schedule_interval(self.capture_and_detect, 0.2)
 
-    def capture_and_detect(self):
+    def capture_and_detect(self, dt):
                 
         img = picam2.capture_array()
 
@@ -64,7 +64,7 @@ class CV_Camera(object):
             cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
 
         cv2.imshow("Camera", img)
-        
+
 
     def get_face_from_centre_x(self):
         

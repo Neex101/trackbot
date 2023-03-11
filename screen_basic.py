@@ -19,6 +19,9 @@ Builder.load_string("""
 <BasicDevScreen>:
 
     cool_down_label : cool_down_label
+    gCodeInput:gCodeInput
+    enter_button: enter_button
+
 
     BoxLayout: 
         spacing: 0
@@ -57,7 +60,18 @@ Builder.load_string("""
                 size:self.texture_size
                 text_size: self.size
 
+            TextInput:                      
+                id:gCodeInput
+                multiline: False
+                text: ''
+                # on_text_validate: root.send_gcode_textinput()
 
+            Button:
+                id: enter_button
+                text: "Enter"
+                on_press: root.send_gcode_textinput()
+                size_hint_x:0.3
+                background_color: .6, 1, 0.6, 1
 
 """)
 
@@ -66,13 +80,16 @@ class BasicDevScreen(Screen):
 
     screen_manager = ObjectProperty()
     machine = ObjectProperty()
+    pilot = ObjectProperty()
+
 
     def __init__(self, **kwargs):
         
         super(BasicDevScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-
+        self.p=kwargs['pilot']
+        
         self.cool_down_label.text = 'Test'
 
     def on_pre_enter(self):
@@ -89,3 +106,6 @@ class BasicDevScreen(Screen):
 
     def update_position_label_text(self, pos):
         self.cool_down_label.text = str(pos)
+
+    def send_gcode_textinput(self): 
+        self.m.send_to_serial(str(self.gCodeInput.text))

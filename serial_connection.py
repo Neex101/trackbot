@@ -140,3 +140,9 @@ class SerialConnection(object):
         else: 
             return False
 
+    # write something to the serial port
+    def send(self, message):
+        if self.s.isOpen():
+            payload = message + "\n"
+            log(payload) 
+            self.s.write(str.encode(payload))

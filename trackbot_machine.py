@@ -23,26 +23,22 @@ def log(message):
 
 class TrackBotMachine(object):
     
-    s = None # serial object
-    cv = None
+    serial_conn = None # serial object
+    cv = None # camera vision
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, make_serial_connection):
 
         self.sm = screen_manager
-
-        # self.s = serial_connection.SerialConnection(self, self.sm)
-        log("Polling centres...")
-        Clock.schedule_interval(self.face_centre_from_centre_of_frame_in_x, 0.2)
-
+        if make_serial_connection: self.serial_conn = serial_connection.SerialConnection(self, self.sm)
         self.cv = cv_camera.CV_Camera(self.sm)
-
-
 
     def __del__(self):
         log('trackbot_machine destructor')
 
-    def face_centre_from_centre_of_frame_in_x(self, dt):
-        if self.cv:
-            pos = self.cv.get_face_from_centre_x()
-            log("Face centre in x: " + str(pos))
-            self.sm.get_screen('basic_screen').update_position_label_text(str(pos))
+    def spin_z(self, increment):
+        pos = increment / 100
+        self.send_to_serial("G0 Z" + str(pos))
+
+    def send_to_serial(self, msg):
+        if self.serial_conn:
+            self.serial_conn.send(str(msg))

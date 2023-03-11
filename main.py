@@ -40,17 +40,17 @@ class TrackBotUI(App):
 
     def build(self):
 
+        # should serial connection be made? Saves time in dev to not make connection sometimes.
         is_make_serial_connection = None
+        if sys.platform == "win32": is_make_serial_connection = False
+        else: is_make_serial_connection = True
 
         log("Starting App.")
 
         # Screens manager object. This will be passed to objects so that they can influence the screens.
         sm = ScreenManager(transition=NoTransition())
 
-        # Physical representation of the robot. It contains movement commands, and it's own camera and serial objects. 
-        if sys.platform == "win32": is_make_serial_connection = False
-        else: is_make_serial_connection = True
-            
+        # Physical representation of the robot. It contains movement commands, and it's own camera and serial objects.           
         m = trackbot_machine.TrackBotMachine(sm, is_make_serial_connection)
 
         # The pilot is the control mechanism which reads the inputs and tells the machine what to do - so it's the algorithm of how things move.

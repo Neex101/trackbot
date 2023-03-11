@@ -37,8 +37,6 @@ class TrackBotMachine(object):
 
     def spin_z(self, increment):
         pos = increment / 100
-        self.send_to_serial("M17")
-        self.send_to_serial("G91")
         self.send_to_serial("G0 Z" + str(pos))
 
     def send_to_serial(self, msg):

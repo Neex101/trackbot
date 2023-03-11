@@ -46,7 +46,7 @@ class TrackBotUI(App):
         sm = ScreenManager(transition=NoTransition())
 
         # Physical representation of the robot. It contains movement commands, and it's own camera and serial objects. 
-        m = trackbot_machine.TrackBotMachine(sm)
+        m = trackbot_machine.TrackBotMachine(sm, False)
 
         # The pilot is the control mechanism which reads the inputs and tells the machine what to do - so it's the algorithm of how things move.
         p = pilot.Pilot(sm, m)

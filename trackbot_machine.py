@@ -23,14 +23,13 @@ def log(message):
 
 class TrackBotMachine(object):
     
-    s = None # serial object
+    serial_conn = None # serial object
     cv = None # camera vision
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, make_serial_connection):
 
         self.sm = screen_manager
-
-        self.s = serial_connection.SerialConnection(self, self.sm)
+        if make_serial_connection: self.serial_conn = serial_connection.SerialConnection(self, self.sm)
         self.cv = cv_camera.CV_Camera(self.sm)
 
     def __del__(self):
@@ -38,6 +37,10 @@ class TrackBotMachine(object):
 
     def spin_z(self, increment):
         pos = increment / 100
-        self.s.send("M17")
-        self.s.send("G91")
-        self.s.send("G0 Z" + str(pos))
+        self.send_to_serial("M17")
+        self.send_to_serial("G91")
+        self.send_to_serial("G0 Z" + str(pos))
+
+    def send_to_serial(self, msg):
+        if self.serial_conn:
+            self.serial_conn.send(str(msg))

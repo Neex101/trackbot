@@ -40,21 +40,21 @@ class TrackBotUI(App):
 
     def build(self):
 
-        log("Starting App:")
+        log("Starting App.")
 
-        # Establish screens
+        # Screens manager object. This will be passed to objects so that they can influence the screens.
         sm = ScreenManager(transition=NoTransition())
 
-        # Initialise 'm'achine object
+        # Physical representation of the robot. It contains movement commands, and it's own camera and serial objects. 
         m = trackbot_machine.TrackBotMachine(sm)
 
-        # Initialise 'p'ilot object
+        # The pilot is the control mechanism which reads the inputs and tells the machine what to do - so it's the algorithm of how things move.
         p = pilot.Pilot(sm, m)
 
-        # # initialise the screens (legacy)
+        # Declare screens:
         basic_screen = screen_basic.BasicDevScreen(name='basic_screen', screen_manager = sm, machine = m, pilot = p)
 
-        # # add the screens to screen manager
+        # Add the screens to screen manager:
         sm.add_widget(basic_screen)
 
         return sm

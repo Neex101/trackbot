@@ -127,13 +127,9 @@ class BasicDevScreen(Screen):
 
     def say(self, text):
 
-        # importing the pyttsx library
         import pyttsx3
-        
-        # initialisation
         engine = pyttsx3.init()
         
-        # testing
+        log("Saying: " + text)
         engine.say(text)
         engine.runAndWait()
-        log("Saying: " + text)

@@ -64,7 +64,6 @@ Builder.load_string("""
                 id:gCodeInput
                 multiline: False
                 text: ''
-                # on_text_validate: root.send_gcode_textinput()
 
             Button:
                 id: enter_button
@@ -73,6 +72,12 @@ Builder.load_string("""
                 size_hint_x:0.3
                 background_color: .6, 1, 0.6, 1
 
+            Button:
+                id: enter_button
+                text: "Say something"
+                on_press: root.generate_speech()
+                size_hint_x:0.3
+                background_color: .6, 1, 0.6, 1
 """)
 
 
@@ -109,3 +114,14 @@ class BasicDevScreen(Screen):
 
     def send_gcode_textinput(self): 
         self.m.send_to_serial(str(self.gCodeInput.text))
+
+    def generate_speech(self):
+        # importing the pyttsx library
+        import pyttsx3
+        
+        # initialisation
+        engine = pyttsx3.init()
+        
+        # testing
+        engine.say("Hello, my name is TrackBot. Or you can call me Three, if you like. I'm pretty dumb right now, but they're giving me upgrades soon which I'm quite excited about. Then maybe I'll do stuff. Until then, saying this sentence is all I can do. And this one. And this one too. And this one. And... ok you get it.")
+        engine.runAndWait()

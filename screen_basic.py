@@ -133,3 +133,5 @@ class BasicDevScreen(Screen):
         log("Saying: " + text)
         engine.say(text)
         engine.runAndWait()
+
+        return

@@ -120,14 +120,20 @@ class BasicDevScreen(Screen):
         self.m.send_to_serial(str(self.gCodeInput.text))
 
     def generate_speech(self):
+
+        import threading
+        text = "Hello, my name is TrackBot. Or you can call me Three, if you like. I'm pretty dumb right now, but they're giving me upgrades soon which I'm quite excited about. Then maybe I'll do stuff. Until then, saying this sentence is all I can do. And this one. And this one too. And this one. And... ok you get it. Bye bye, for now."
+        threading.Thread(target=self.say, args=(text,)).start()
+
+    def say(self, text):
+
         # importing the pyttsx library
         import pyttsx3
         
         # initialisation
         engine = pyttsx3.init()
         
-        speech_to_say = "Hello, my name is TrackBot. Or you can call me Three, if you like. I'm pretty dumb right now, but they're giving me upgrades soon which I'm quite excited about. Then maybe I'll do stuff. Until then, saying this sentence is all I can do. And this one. And this one too. And this one. And... ok you get it. Bye bye, for now."
         # testing
-        engine.say(speech_to_say)
+        engine.say(text)
         engine.runAndWait()
-        log("Saying: " + speech_to_say)
+        log("Saying: " + text)

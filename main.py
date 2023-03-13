@@ -42,8 +42,8 @@ class TrackBotUI(App):
 
         # should serial connection be made? Saves time in dev to not make connection sometimes.
         is_make_serial_connection = None
-        if sys.platform == "win32": is_make_serial_connection = False
-        else: is_make_serial_connection = True
+        if sys.platform == "win32": is_make_serial_connection = False # my dev environment is Windows
+        else: is_make_serial_connection = True # TrackBot's OS is Linux
 
         log("Starting App.")
 

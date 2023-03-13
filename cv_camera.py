@@ -48,7 +48,7 @@ class CV_Camera(object):
             self.picam2 = Picamera2()
             # preview_config = self.picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (self.cam_frame_x_size, self.cam_frame_y_size), })
             # preview_config = self.picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (1920, 1080), })
-            preview_config = self.picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (768, 432), })
+            preview_config = self.picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (1200, 432), })
             preview_config["transform"] = libcamera.Transform(hflip=1, vflip=1)
             self.picam2.configure(preview_config)
             self.picam2.start()

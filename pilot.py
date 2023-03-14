@@ -28,15 +28,15 @@ class Pilot(object):
         self.sm = screen_manager
         self.m = machine
 
-        # Clock.schedule_interval(self.get_face_centre_from_centre_of_frame_in_x, 0.2)
+        # Clock.schedule_interval(self.spin_z_to_center_the_face, 0.2)
 
-    def get_face_centre_from_centre_of_frame_in_x(self, dt):
+    def spin_z_to_center_the_face(self, dt):
 
         if self.m:
-            pos = self.m.cv.get_face_from_centre_x()
-            log("Face centre in x: " + str(pos))
-            self.sm.get_screen('basic_screen').update_position_label_text(str(pos))
-            self.m.spin_z(pos)
+            angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
+            log("Face centre in x: " + str(angle) + "°")
+            self.sm.get_screen('basic_screen').update_position_label_text(str(angle))
+            self.m.spin_z(angle)
 
     def __del__(self):
         

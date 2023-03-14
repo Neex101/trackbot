@@ -25,19 +25,27 @@ class TrackBotMachine(object):
     
     serial_conn = None # serial object
     cv = None # camera vision
+    base_rotation_total_degrees = 90
+    base_rotation_starting_degrees = base_rotation_total_degrees / 2
 
     def __init__(self, screen_manager, make_serial_connection):
 
         self.sm = screen_manager
         if make_serial_connection: self.serial_conn = serial_connection.SerialConnection(self, self.sm)
         self.cv = cv_camera.CV_Camera(self.sm)
+        self.run_initial_setup_with_marlin()
 
     def __del__(self):
         log('trackbot_machine destructor')
 
-    def spin_z(self, increment):
-        pos = increment / 100
-        self.send_to_serial("G0 Z" + str(pos))
+    def run_initial_setup_with_marlin(self):
+        if self.serial_conn:
+            self.serial_conn.send("G92 Z" + str(self.base_rotation_starting_degrees)) # sets base rotation position to be midway at powerup
+            log("WARNING!! Overriding steps per Z degree:")
+            self.serial_conn.send("M92 Z52.22222222") # WARNING!! Overriding steps per Z degree
+
+    def spin_z_to_angle(self, degrees):
+        self.send_to_serial("G0 Z" + str(degrees))
 
     def send_to_serial(self, msg):
         if self.serial_conn:

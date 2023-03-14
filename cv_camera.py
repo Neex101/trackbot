@@ -25,10 +25,12 @@ def log(message):
 class CV_Camera(object):
 
     cx, cy = 0, 0 # face centres, measured from top left of frame
-    cam_frame_x_size, cam_frame_y_size = 640, 480 # size of captured frame
+    # cam_frame_x_size, cam_frame_y_size, viewing_angle = 640, 480, 90 # rpi cam mod 3 REG
+    cam_frame_x_size, cam_frame_y_size, viewing_angle = 768, 432, 100 # rpi cam mod 3 WIDE
     
     picam2 = None
     face_detector = None
+    horiztonal_pixels_per_degree_of_vision = cam_frame_x_size / viewing_angle
 
     def __init__(self, screen_manager):
         self.sm = screen_manager
@@ -80,4 +82,10 @@ class CV_Camera(object):
         return x_coord_from_center
         
 
+    def get_horizontal_degrees_of_face_from_centre(self):
+        
+        x_pixels_from_center = self.cx - self.cam_frame_x_size/2
+        degrees_from_center = round((x_pixels_from_center / self.horiztonal_pixels_per_degree_of_vision), 3)
+
+        return degrees_from_center
 

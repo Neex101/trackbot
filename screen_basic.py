@@ -123,7 +123,7 @@ class BasicDevScreen(Screen):
 
         import threading
         # text = "Hello, my name is TrackBot. Or you can call me Three, if you like. I'm pretty dumb right now, but they're giving me upgrades soon which I'm quite excited about. Then maybe I'll do stuff. Until then, saying this sentence is all I can do. And this one. And this one too. And this one. And... ok you get it. Bye bye, for now."
-        text = "Night night Ellia. It was really, really ncie to meet you. I hope I can see you again one day. Lots of love - night night :-)"
+        text = "Night night Ellia. It was really, really nice to meet you. I hope I can see you again one day. Lots of love - sweet dreams :-)"
         threading.Thread(target=self.say, args=(text,)).start()
 
     def say(self, text):

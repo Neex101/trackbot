@@ -24,7 +24,7 @@ def log(message):
 class Pilot(object):
     
     is_tracking = False # initlal tracking status
-    delay_between_tracking_updates = 2 # seconds, basic mode
+    delay_between_tracking_updates = 3 # seconds, basic mode
     tracking_clock = None
 
     def __init__(self, screen_manager, machine):

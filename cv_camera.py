@@ -26,7 +26,7 @@ class CV_Camera(object):
 
     cx, cy = 0, 0 # face centres, measured from top left of frame
     # cam_frame_x_size, cam_frame_y_size, viewing_angle = 640, 480, 90 # rpi cam mod 3 REG
-    cam_frame_x_size, cam_frame_y_size, viewing_angle = 768, 432, 100 # rpi cam mod 3 WIDE
+    cam_frame_x_size, cam_frame_y_size, viewing_angle = 768, 432, 74 # rpi cam mod 3 WIDE
     
     picam2 = None
     face_detector = None

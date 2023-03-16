@@ -53,9 +53,14 @@ class TrackBotMachine(object):
         if target < self.mZ_min: target = self.mZ_min
         self.send_to_serial("G0 Z" + str(target))
 
+    # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
+    def start_serial_services(self, dt):
+        if self.serial_conn:
+            self.serial_conn.start_services()       
+    
     def send_to_serial(self, msg):
         if self.serial_conn:
-            self.serial_conn.send(str(msg))
+            self.serial_conn.add_to_serial_buffer(str(msg))
 
     def reset_z_to_zero_pos(self):
         self.mZ = 0

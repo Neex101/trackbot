@@ -17,7 +17,7 @@ from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
-Config.set('graphics', 'maxfps', '60')
+Config.set('graphics', 'maxfps', '30')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
@@ -42,7 +42,7 @@ class TrackBotUI(App):
 
         # should serial connection be made? Saves time in dev to not make connection sometimes.
         is_make_serial_connection = None
-        if sys.platform == "win32": is_make_serial_connection = False # my dev environment is Windows
+        if sys.platform == "win32": is_make_serial_connection = True # my dev environment is Windows
         else: is_make_serial_connection = True # TrackBot's OS is Linux
 
         log("Starting App.")

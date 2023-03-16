@@ -113,7 +113,7 @@ class BasicDevScreen(Screen):
         pass
 
     def on_enter(self):
-        pass    
+        Clock.schedule_once(self.m.start_serial_services, 1)
 
     def exit_screen(self, dt):
         pass

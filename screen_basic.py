@@ -73,9 +73,16 @@ Builder.load_string("""
                 background_color: .6, 1, 0.6, 1
 
             Button:
-                id: enter_button
+                id: speak_button
                 text: "Say something"
                 on_press: root.generate_speech()
+                size_hint_x:0.3
+                background_color: .6, 1, 0.6, 1
+
+            Button:
+                id: track_button
+                text: "Track"
+                on_press: root.toggle_tracking_on_off()
                 size_hint_x:0.3
                 background_color: .6, 1, 0.6, 1
 """)
@@ -92,6 +99,7 @@ class BasicDevScreen(Screen):
     pilot = ObjectProperty()
 
 
+
     def __init__(self, **kwargs):
         
         super(BasicDevScreen, self).__init__(**kwargs)
@@ -105,7 +113,7 @@ class BasicDevScreen(Screen):
         pass
 
     def on_enter(self):
-        pass    
+        Clock.schedule_once(self.m.start_serial_services, 1)
 
     def exit_screen(self, dt):
         pass
@@ -122,7 +130,8 @@ class BasicDevScreen(Screen):
     def generate_speech(self):
 
         import threading
-        text = "Hello, my name is TrackBot. Or you can call me Three, if you like. I'm pretty dumb right now, but they're giving me upgrades soon which I'm quite excited about. Then maybe I'll do stuff. Until then, saying this sentence is all I can do. And this one. And this one too. And this one. And... ok you get it. Bye bye, for now."
+        # text = "Hello, my name is TrackBot. Or you can call me Three, if you like. I'm pretty dumb right now, but they're giving me upgrades soon which I'm quite excited about. Then maybe I'll do stuff. Until then, saying this sentence is all I can do. And this one. And this one too. And this one. And... ok you get it. Bye bye, for now."
+        text = "Night night Ellia. It was really, really nice to meet you. I hope I can see you again one day. Lots of love - sweet dreams :-)"
         threading.Thread(target=self.say, args=(text,)).start()
 
     def say(self, text):
@@ -135,3 +144,7 @@ class BasicDevScreen(Screen):
         engine.runAndWait()
 
         return
+    
+    def toggle_tracking_on_off(self):
+        if self.pilot.is_tracking: self.pilot.stop_tracking()
+        else: self.pilot.start_tracking()

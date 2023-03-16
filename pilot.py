@@ -23,20 +23,32 @@ def log(message):
 
 class Pilot(object):
     
+    is_tracking = False # initlal tracking status
+    delay_between_tracking_updates = 5 # seconds, basic mode
+    tracking_clock = None
+
     def __init__(self, screen_manager, machine):
 
         self.sm = screen_manager
         self.m = machine
 
-        # Clock.schedule_interval(self.get_face_centre_from_centre_of_frame_in_x, 0.2)
+    def start_tracking(self):
+        log("Tracking ON")
+        self.is_tracking = True
+        self.tracking_clock = Clock.schedule_interval(self.spin_z_to_center_the_face, self.delay_between_tracking_updates)
+    
+    def stop_tracking(self):
+        log("Tracking OFF")
+        self.is_tracking = False
+        Clock.unschedule(self.tracking_clock)    
 
-    def get_face_centre_from_centre_of_frame_in_x(self, dt):
+    def spin_z_to_center_the_face(self, dt):
 
         if self.m:
-            pos = self.m.cv.get_face_from_centre_x()
-            log("Face centre in x: " + str(pos))
-            self.sm.get_screen('basic_screen').update_position_label_text(str(pos))
-            self.m.spin_z(pos)
+            angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
+            log("Face away from vertical-centre: " + str(angle) + "°")
+            self.sm.get_screen('basic_screen').update_position_label_text(str(angle))
+            self.m.move_z_angle_relative(angle)
 
     def __del__(self):
         

@@ -25,8 +25,10 @@ class TrackBotMachine(object):
     
     serial_conn = None # serial object
     cv = None # camera vision
-    base_rotation_total_degrees = 90
-    base_rotation_starting_degrees = base_rotation_total_degrees / 2
+
+    mX, mX_min, mX_max = 0, 0, 180 # machine co-ordinates for X, degrees
+    mY, mY_min, mY_max = 0, 0, 180 # machine co-ordinates for Y, degrees
+    mZ, mZ_min, mZ_max = 0, -45, 45 # machine co-ordinates for Z, degrees | Z initialises at zero (mid position) and can enter negative space
 
     def __init__(self, screen_manager, make_serial_connection):
 
@@ -39,14 +41,22 @@ class TrackBotMachine(object):
         log('trackbot_machine destructor')
 
     def run_initial_setup_with_marlin(self):
-        if self.serial_conn:
-            self.serial_conn.send("G92 Z" + str(self.base_rotation_starting_degrees)) # sets base rotation position to be midway at powerup
-            log("WARNING!! Overriding steps per Z degree:")
-            self.serial_conn.send("M92 Z52.22222222") # WARNING!! Overriding steps per Z degree
+        log("WARNING!! Overriding steps per Z degree:")
+        self.send_to_serial("M92 Z52.22222222") # WARNING!! Overriding steps per Z degree
 
-    def spin_z_to_angle(self, degrees):
-        self.send_to_serial("G0 Z" + str(degrees))
+    # number of degrees to rotate z axis, relative to current position
+    def move_z_angle_relative(self, degrees): 
+        # add to current position
+        target = degrees + self.mZ        
+        # respect soft limits
+        if target > self.mZ_max: target = self.mZ_max 
+        if target < self.mZ_min: target = self.mZ_min
+        self.send_to_serial("G0 Z" + str(target))
 
     def send_to_serial(self, msg):
         if self.serial_conn:
             self.serial_conn.send(str(msg))
+
+    def reset_z_to_zero_pos(self):
+        self.mZ = 0
+        self.send_to_serial("G92 Z" + str(self.base_rotation_starting_degrees)) # sets base rotation position to be midway at powerup

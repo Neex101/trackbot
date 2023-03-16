@@ -33,6 +33,9 @@ class CV_Camera(object):
     horiztonal_pixels_per_degree_of_vision = cam_frame_x_size / viewing_angle
 
     def __init__(self, screen_manager):
+
+        self.new_face_data = False    
+
         self.sm = screen_manager
 
         # if Windows, for dev
@@ -59,17 +62,20 @@ class CV_Camera(object):
             Clock.schedule_interval(self.capture_and_detect, 0.2)
 
     def capture_and_detect(self, dt):
-                
+
+        self.new_face_data = False    
         img = self.picam2.capture_array()
 
         grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = self.face_detector.detectMultiScale(grey, 1.1, 5)
 
         for (x, y, w, h) in faces:
+
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0))
             self.cx=int(x+x+w)//2
             self.cy=int(y+y+h)//2
             cv2.circle(img,(self.cx,self.cy),5,(0,0,255),-1)
+            self.new_face_data = True    
 
         cv2.imshow("Camera", img)
 
@@ -84,8 +90,10 @@ class CV_Camera(object):
 
     def get_horizontal_degrees_of_face_from_centre(self):
         
-        x_pixels_from_center = self.cx - self.cam_frame_x_size/2
-        degrees_from_center = round((x_pixels_from_center / self.horiztonal_pixels_per_degree_of_vision), 3)
-
-        return degrees_from_center
+        if self.new_face_data:    
+            x_pixels_from_center = self.cx - self.cam_frame_x_size/2
+            degrees_from_center = round((x_pixels_from_center / self.horiztonal_pixels_per_degree_of_vision), 3)
+            return degrees_from_center
+        else:
+            return 0
 

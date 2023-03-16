@@ -73,9 +73,16 @@ Builder.load_string("""
                 background_color: .6, 1, 0.6, 1
 
             Button:
-                id: enter_button
+                id: speak_button
                 text: "Say something"
                 on_press: root.generate_speech()
+                size_hint_x:0.3
+                background_color: .6, 1, 0.6, 1
+
+            Button:
+                id: track_button
+                text: "Track"
+                on_press: root.toggle_tracking_on_off()
                 size_hint_x:0.3
                 background_color: .6, 1, 0.6, 1
 """)
@@ -90,6 +97,7 @@ class BasicDevScreen(Screen):
     screen_manager = ObjectProperty()
     machine = ObjectProperty()
     pilot = ObjectProperty()
+
 
 
     def __init__(self, **kwargs):
@@ -136,3 +144,7 @@ class BasicDevScreen(Screen):
         engine.runAndWait()
 
         return
+    
+    def toggle_tracking_on_off(self):
+        if self.pilot.is_tracking: self.pilot.stop_tracking()
+        else: self.pilot.start_tracking()

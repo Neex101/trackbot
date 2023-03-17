@@ -96,16 +96,12 @@ class BasicDevScreen(Screen):
 
     screen_manager = ObjectProperty()
     machine = ObjectProperty()
-    pilot = ObjectProperty()
-
-
 
     def __init__(self, **kwargs):
         
         super(BasicDevScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.p=kwargs['pilot']
         
         self.cool_down_label.text = 'Test'
 
@@ -146,5 +142,5 @@ class BasicDevScreen(Screen):
         return
     
     def toggle_tracking_on_off(self):
-        if self.pilot.is_tracking: self.pilot.stop_tracking()
-        else: self.pilot.start_tracking()
+        if self.m.track_pilot.is_tracking: self.pilot.stop_tracking()
+        else: self.m.track_pilot.start_tracking()

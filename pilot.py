@@ -24,31 +24,37 @@ def log(message):
 class Pilot(object):
     
     is_tracking = False # initlal tracking status
-    delay_between_tracking_updates = 5 # seconds, basic mode
+    delay_between_tracking_moves = 0.2 # seconds, basic mode
     tracking_clock = None
+    is_move_allowed = True # if bot is moving, this flag blocks more move commands from being sent
+
+    z_deadband = 0 # number of degrees movement must exceed before bot moves (to avoid high frequence micromove jitter)
 
     def __init__(self, screen_manager, machine):
-
         self.sm = screen_manager
         self.m = machine
 
     def start_tracking(self):
         log("Tracking ON")
-        self.is_tracking = True
-        self.tracking_clock = Clock.schedule_interval(self.spin_z_to_center_the_face, self.delay_between_tracking_updates)
-    
+        self.is_tracking = True # serial scanner looks for this flag and acts on ok's if True
+        self.tracking_clock = Clock.schedule_interval(self.spin_z_to_center_the_face, self.delay_between_tracking_moves)
+
     def stop_tracking(self):
         log("Tracking OFF")
         self.is_tracking = False
-        Clock.unschedule(self.tracking_clock)    
+        Clock.unschedule(self.tracking_clock)
 
     def spin_z_to_center_the_face(self, dt):
-
-        if self.m:
+        if self.m: # flag blocks move command if moving already
+            
             angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
-            log("Face away from vertical-centre: " + str(angle) + "°")
-            self.sm.get_screen('basic_screen').update_position_label_text(str(angle))
-            self.m.move_z_angle_relative(angle)
+            log("Face away from vertical-centre: " + str(angle) + " °")
+            self.sm.get_screen('basic_screen').update_position_label_text(str(angle) + " °")
+
+            if self.is_move_allowed and abs(angle) >= self.z_deadband: # avoids micro-move jitter
+                self.is_move_allowed = False # blocks any more move requests until scanner receives ok and flips flag again
+                self.m.move_z_angle_relative(angle)
+
 
     def __del__(self):
         

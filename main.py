@@ -27,7 +27,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
 import trackbot_machine
-import pilot
 
 # Screens
 import screen_basic
@@ -42,7 +41,7 @@ class TrackBotUI(App):
 
         # should serial connection be made? Saves time in dev to not make connection sometimes.
         is_make_serial_connection = None
-        if sys.platform == "win32": is_make_serial_connection = True # my dev environment is Windows
+        if sys.platform == "win32": is_make_serial_connection = False # my dev environment is Windows
         else: is_make_serial_connection = True # TrackBot's OS is Linux
 
         log("Starting App.")
@@ -53,11 +52,8 @@ class TrackBotUI(App):
         # Physical representation of the robot. It contains movement commands, and it's own camera and serial objects.           
         m = trackbot_machine.TrackBotMachine(sm, is_make_serial_connection)
 
-        # The pilot is the control mechanism which reads the inputs and tells the machine what to do - so it's the algorithm of how things move.
-        p = pilot.Pilot(sm, m)
-
         # Declare screens:
-        basic_screen = screen_basic.BasicDevScreen(name='basic_screen', screen_manager = sm, machine = m, pilot = p)
+        basic_screen = screen_basic.BasicDevScreen(name='basic_screen', screen_manager = sm, machine = m)
 
         # Add the screens to screen manager:
         sm.add_widget(basic_screen)

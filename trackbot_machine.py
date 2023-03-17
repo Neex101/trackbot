@@ -13,6 +13,9 @@ from datetime import datetime
 import os.path
 from os import path
 
+import pilot
+
+
 #from __builtin__ import True
 
 
@@ -25,6 +28,7 @@ class TrackBotMachine(object):
     
     serial_conn = None # serial object
     cv = None # camera vision
+    track_pilot = None # controller used to track objects in cv
 
     mX, mX_min, mX_max = 0, 0, 180 # machine co-ordinates for X, degrees
     mY, mY_min, mY_max = 0, 0, 180 # machine co-ordinates for Y, degrees
@@ -33,9 +37,14 @@ class TrackBotMachine(object):
     def __init__(self, screen_manager, make_serial_connection):
 
         self.sm = screen_manager
+
         if make_serial_connection: self.serial_conn = serial_connection.SerialConnection(self, self.sm)
-        self.cv = cv_camera.CV_Camera(self.sm)
         self.run_initial_setup_with_marlin()
+        
+        self.cv = cv_camera.CV_Camera(self.sm)
+        
+        # The pilot is the control mechanism which reads the inputs and tells the machine what to do - so it's the algorithm of how things move.
+        self.track_pilot = pilot.Pilot(self.sm, self)
 
     def __del__(self):
         log('trackbot_machine destructor')
@@ -52,6 +61,7 @@ class TrackBotMachine(object):
         if target > self.mZ_max: target = self.mZ_max 
         if target < self.mZ_min: target = self.mZ_min
         self.send_to_serial("G0 Z" + str(target))
+        self.send_to_serial("M400") # makes sure ok is not isssued by Marlin until move complete
 
     # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_serial_services(self, dt):

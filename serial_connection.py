@@ -218,6 +218,9 @@ class SerialConnection(object):
 
                 if self.VERBOSE_ALL_RESPONSE: log(" <<< " + str(rec_temp))
 
+                if rec_temp == 'ok':
+                    if self.m.track_pilot.is_tracking: self.m.track_pilot.is_move_allowed = True
+                    
                 # # Update the gcode monitor (may not be initialised) and console:
                 # try:
                 #     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)

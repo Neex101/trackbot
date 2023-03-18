@@ -206,7 +206,7 @@ class SerialConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.s.readline().strip()  # Block the executing thread indefinitely until a line arrives
-                    rec_temp - rec_temp.decode('ascii')
+                    rec_temp = rec_temp.decode('ascii')
                 except Exception as e:
                     log(' <<< ERROR: serial.readline exception: ' + str(e))
                     rec_temp = ''

@@ -30,7 +30,7 @@ class SerialConnection(object):
     # Serial connection details
     BAUD_RATE = 115200 
     STATUS_INTERVAL = 1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
-
+    poll_for_status = False
 
     def __init__(self, machine, screen_manager):
         
@@ -190,7 +190,7 @@ class SerialConnection(object):
                 self.FLUSH_FLAG = False
 
             # Poll for status
-            if self.next_poll_time < time.time():
+            if self.poll_for_status and self.next_poll_time < time.time():
                 self._write_to_serial('M114 R')
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
 

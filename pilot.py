@@ -24,7 +24,7 @@ def log(message):
 class Pilot(object):
     
     is_tracking = False # initlal tracking status
-    delay_between_tracking_moves = 0.2 # seconds, basic mode
+    delay_between_tracking_moves = 0.5 # seconds, basic mode
     tracking_clock = None
     is_move_allowed = True # if bot is moving, this flag blocks more move commands from being sent
 
@@ -45,13 +45,13 @@ class Pilot(object):
         Clock.unschedule(self.tracking_clock)
 
     def spin_z_to_center_the_face(self, dt):
-        if self.m: # flag blocks move command if moving already
+        if self.m: 
             
             angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
             log("Face away from vertical-centre: " + str(angle) + " °")
             self.sm.get_screen('basic_screen').update_position_label_text(str(angle) + " °")
 
-            if self.is_move_allowed and abs(angle) >= self.z_deadband: # avoids micro-move jitter
+            if self.is_move_allowed and abs(angle) >= self.z_deadband: # # flag blocks move command if moving already & avoids micro-move jitter
                 self.is_move_allowed = False # blocks any more move requests until scanner receives ok and flips flag again
                 self.m.move_z_angle_relative(angle)
 

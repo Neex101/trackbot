@@ -28,7 +28,7 @@ class Pilot(object):
     tracking_clock = None
     is_move_allowed = True # if bot is moving, this flag blocks more move commands from being sent
 
-    z_deadband = 0 # number of degrees movement must exceed before bot moves (to avoid high frequence micromove jitter)
+    z_deadband = 1 # number of degrees movement must exceed before bot moves (to avoid high frequence micromove jitter)
 
     def __init__(self, screen_manager, machine):
         self.sm = screen_manager
@@ -51,11 +51,11 @@ class Pilot(object):
         if self.m: 
             
             angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
-            log("Face away from vertical-centre: " + str(angle) + " °")
             self.sm.get_screen('basic_screen').update_position_label_text(str(angle) + " °")
 
             if self.is_move_allowed and abs(angle) >= self.z_deadband: # # flag blocks move command if moving already & avoids micro-move jitter
 
+                log("Face away from vertical-centre: " + str(angle) + " °")
                 self.is_move_allowed = False # blocks any more move requests until scanner receives ok and flips flag again
                 self.ser_ok_count = 0
 

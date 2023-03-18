@@ -143,5 +143,5 @@ class BasicDevScreen(Screen):
         return
     
     def toggle_tracking_on_off(self):
-        if self.m.track_pilot.is_tracking: self.pilot.stop_tracking()
+        if self.m.track_pilot.is_tracking: self.m.track_pilot.stop_tracking()
         else: self.m.track_pilot.start_tracking()

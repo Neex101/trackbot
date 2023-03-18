@@ -41,11 +41,13 @@ class Pilot(object):
 
     def start_tracking(self):
         log("Tracking ON")
+        self.is_tracking = True # for button toggle
         self.ser_ok_count = 0
         self.tracking_clock = Clock.schedule_interval(self.spin_z_to_center_the_face, self.delay_between_tracking_moves)
 
     def stop_tracking(self):
         log("Tracking OFF")
+        self.is_tracking = False # for button toggle
         Clock.unschedule(self.tracking_clock)
 
     def spin_z_to_center_the_face(self, dt):

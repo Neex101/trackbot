@@ -34,6 +34,9 @@ class Pilot(object):
         self.sm = screen_manager
         self.m = machine
 
+    def __del__(self):
+        log('pilot destructor')
+
     def start_tracking(self):
         log("Tracking ON")
         self.is_tracking = True # serial scanner looks for this flag and acts on ok's if True
@@ -52,10 +55,18 @@ class Pilot(object):
             self.sm.get_screen('basic_screen').update_position_label_text(str(angle) + " °")
 
             if self.is_move_allowed and abs(angle) >= self.z_deadband: # # flag blocks move command if moving already & avoids micro-move jitter
+
                 self.is_move_allowed = False # blocks any more move requests until scanner receives ok and flips flag again
+                self.ser_ok_count = 0
+
+
                 self.m.move_z_angle_relative(angle)
+                self.m.get_ok_when_last_move_complete()
 
+    ser_ok_count = 0
 
-    def __del__(self):
-        
-        log('pilot destructor')
+    # serial connection received an 'ok'
+    def ser_ok_received(self): 
+        self.ser_ok_count += 1
+        if self.ser_ok_count == 2: # i.e. ser has recd an ok for the move command, and an ok for the completion
+            self.is_move_allowed = True

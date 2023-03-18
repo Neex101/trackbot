@@ -61,7 +61,9 @@ class TrackBotMachine(object):
         if target > self.mZ_max: target = self.mZ_max 
         if target < self.mZ_min: target = self.mZ_min
         self.send_to_serial("G0 Z" + str(target))
-        self.send_to_serial("M400") # makes sure ok is not isssued by Marlin until move complete
+
+    def get_ok_when_last_move_complete(self):
+        self.send_to_serial("M400") # makes sure ok is isssued after line buffer is complete
 
     # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_serial_services(self, dt):

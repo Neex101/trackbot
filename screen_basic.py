@@ -62,7 +62,7 @@ Builder.load_string("""
 
             TextInput:                      
                 id:gCodeInput
-                multiline: False
+                multiline: True
                 text: ''
 
             Button:

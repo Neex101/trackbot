@@ -51,14 +51,12 @@ class Pilot(object):
         Clock.unschedule(self.tracking_clock)
 
     def spin_z_to_center_the_face(self, dt):
-        if self.m: 
-            
+        if self.m:    
             angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
             angle = angle * -1 # flips direction to match camera flip
             self.sm.get_screen('basic_screen').update_position_label_text(str(angle) + " °")
 
             if self.is_move_allowed and abs(angle) >= self.z_deadband: # # flag blocks move command if moving already & avoids micro-move jitter
-
                 log("Face away from vertical-centre: " + str(angle) + " °")
                 self.is_move_allowed = False # blocks any more move requests until scanner receives ok and flips flag again
                 self.ser_ok_count = 0

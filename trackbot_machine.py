@@ -61,6 +61,7 @@ class TrackBotMachine(object):
         if target > self.mZ_max: target = self.mZ_max 
         if target < self.mZ_min: target = self.mZ_min
         self.send_to_serial("G0 Z" + str(target))
+        self.mZ = target        
 
     def get_ok_when_last_move_complete(self):
         self.send_to_serial("M400") # makes sure ok is isssued after line buffer is complete

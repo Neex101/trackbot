@@ -54,6 +54,7 @@ class Pilot(object):
         if self.m: 
             
             angle = self.m.cv.get_horizontal_degrees_of_face_from_centre()
+            angle = angle * -1 # flips direction to match camera flip
             self.sm.get_screen('basic_screen').update_position_label_text(str(angle) + " °")
 
             if self.is_move_allowed and abs(angle) >= self.z_deadband: # # flag blocks move command if moving already & avoids micro-move jitter
